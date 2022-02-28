@@ -13,10 +13,10 @@ then
   # Install the correct homebrew for each OS type
   if test "$(uname)" = "Darwin"
   then
-    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   elif test "$(expr substr $(uname -s) 1 5)" = "Linux"
   then
-    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install)"
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   fi
 
 fi
@@ -46,27 +46,7 @@ cat << EOF
 EOF
 }
 
-install gh
-install iterm2 yes
-install zsh
-install ngrok yes
-install visual-studio-code yes
-install slack yes
-install google-chrome yes
-install spotify yes
-install 1password yes
-install github-desktop yes
-install OneDrive yes
-install powershell yes
-install google-drive yes
-install jetbrains-toolbox yes
-install postman yes
-install nodenv
-nodenv install
-install keyboard-maestro yes
 brew install openssl readline sqlite3 xz zlib
-curl https://pyenv.run | bash
-
 brew cleanup
 rm -f -r /Library/Caches/Homebrew/*
 
