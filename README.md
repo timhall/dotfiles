@@ -9,7 +9,7 @@ They're so personal I copied much of them from https://github.com/haacked/dotfil
 Run this:
 
 ```sh
-git clone https://github.com/haacked/dotfiles.git ~/.dotfiles
+git clone https://github.com/timhall/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 script/bootstrap
 ```
