@@ -35,8 +35,8 @@
   # Force with lease
   force = push --force-with-lease
 
-  # Clean up branches
-  bclean = "!f() { DEFAULT=$(git default); git merged-squashed ${1-$DEFAULT} | grep -v \"^Checking\" | grep -v \"^$\" | cut -d\" \" -f1 | xargs -r git branch -D; }; f"
+  # Clean up branches whose upstream is gone (PR merged + remote branch deleted)
+  bclean = "!f() { git fetch --prune --quiet; cur=$(git symbolic-ref --short HEAD); git branch --format '%(refname:short) %(upstream:track)' | awk -v c=\"$cur\" '$2 == \"[gone]\" && $1 != c { print $1 }' | xargs -r git branch -D; }; f"
 
   # Switches to specified branch / default branch, runs `git up`, then runs `git bclean`
   bdone = "!f() { DEFAULT=$(git default); git checkout ${1-$DEFAULT} && git up && git bclean ${1-$DEFAULT}; }; f"
@@ -56,12 +56,11 @@
   # Undo last commit
   undo = reset HEAD~1 --mixed
 
-  # Comiit and push changeset
-  changeset = !git cm 'chore: changeset'
+  # Commit and push changeset
+  changeset = !git cm 'changeset'
 
   cp = cherry-pick
   unstage = reset -q HEAD --
 
   default = !git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'
   aliases = "!f() {\n  awk \"\n    /^[[:space:]]*#[[:space:]]*[0-9]+[a-z]?\\./ {\n      # Numbered comment line\n      gsub(/^[[:space:]]*#[[:space:]]*/, \\\"\\\");\n      desc = \\$0;\n      next;\n    }\n    /^[[:space:]]*#[[:space:]]+[A-Z]/ {\n      # Non-numbered descriptive comment (starts with capital letter)\n      gsub(/^[[:space:]]*#[[:space:]]*/, \\\"\\\");\n      desc = \\$0;\n      next;\n    }\n    /^[[:space:]]*#[[:space:]]*\\`git / {\n      # Example usage line\n      gsub(/^[[:space:]]*#[[:space:]]*/, \\\"\\\");\n      example = \\$0;\n      next;\n    }\n    /^[[:space:]]*[a-z][a-z0-9-]+ = / {\n      # Alias definition\n      split(\\$0, parts, \\\" = \\\");\n      cmd = parts[1];\n      gsub(/^[[:space:]]+|[[:space:]]+\\$/, \\\"\\\", cmd);\n      if (desc != \\\"\\\") {\n        printf \\\"  %-10s%s\\n\\\", cmd, desc;\n        if (example != \\\"\\\") {\n          printf \\\"  %-10s%s\\n\\\", \\\"\\\", example;\n          example = \\\"\\\";\n        }\n        desc = \\\"\\\";\n      }\n    }\n  \" ~/.gitconfig.aliases;\n}; f"
-  merged-squashed = "!f() {\n  DEFAULT=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed \"s@^refs/remotes/origin/@@\");\n  TARGET=${1:-${DEFAULT:-main}};\n  \n  echo \"Checking for branches merged (including squash) into $TARGET...\";\n  echo \"\";\n  \n  git checkout -q \"$TARGET\" 2>/dev/null;\n  git branch --format=\"%(refname:short)\" | while read branch; do\n    if [ \"$branch\" != \"$TARGET\" ]; then\n      # Method 1: Check if truly merged\n      if git merge-base --is-ancestor \"$branch\" \"$TARGET\" 2>/dev/null; then\n        if [ \"$(git rev-parse \"$branch\")\" = \"$(git merge-base \"$branch\" \"$TARGET\")\" ]; then\n          echo \"$branch\";\n          continue;\n        fi\n      fi\n      \n      # Method 2: Check by commit message (squash merge detection)\n      msg=$(git log --format=%s -n 1 \"$branch\" 2>/dev/null);\n      if [ -n \"$msg\" ]; then\n        if git log \"$TARGET\" --format=%s | grep -q -F \"$msg\"; then\n          echo \"$branch (squash-merged)\";\n          continue;\n        fi\n      fi\n      \n      # Method 3: Check if GitHub CLI is available and branch has merged PR\n      if command -v gh >/dev/null 2>&1; then\n        pr_state=$(gh pr list --state merged --head \"$branch\" --json state --jq \".[0].state\" 2>/dev/null);\n        if [ \"$pr_state\" = \"MERGED\" ]; then\n          echo \"$branch (PR merged)\";\n        fi\n      fi\n    fi\n  done;\n}; f"
