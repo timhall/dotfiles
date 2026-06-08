@@ -1,50 +1,63 @@
 # Local/private config goes in the include
 [include]
-        path = ~/.gitconfig.local
-        path = ~/.gitconfig.aliases
+	path = ~/.gitconfig.local
+	path = ~/.gitconfig.aliases
+
+[includeIf "gitdir:~/dev/timhall/"]
+	path = ~/.gitconfig.personal
 
 [color]
-        diff = auto
-        status = auto
-        branch = auto
-        ui = true
+	diff = auto
+	status = auto
+	branch = auto
+	ui = true
 
 [credential]
-        helper = osxkeychain
+	helper = osxkeychain
 
 [difftool]
-        prompt = false
+	prompt = false
 
 [filter "lfs"]
-        clean = git-lfs clean -- %f
-        smudge = git-lfs smudge -- %f
-        process = git-lfs filter-process
-        required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
 
 [mergetool]
-        keepBackup = false
+	keepBackup = false
 
 [pager]
-        branch = false
+	branch = false
 
 [push]
-        # See `git help config` (search for push.default)
-        # for more information on different options of the below setting.
-        #
-        # Setting to git 2.0 default to suppress warning message
-        default = simple
+	# See `git help config` (search for push.default)
+	# for more information on different options of the below setting.
+	#
+	# Setting to git 2.0 default to suppress warning message
+	default = simple
+	autoSetupRemote = true
 
 [rerere]
-        enabled = true
+	enabled = true
 
 [pull]
-        rebase = true
+	rebase = true
 
 [rebase]
-        autostash = true
+	autostash = true
 	autosquash = true
-	
+
 [core]
-	editor = code --wait
+	editor = zed --wait
+	excludesfile = /Users/tim.hall/.gitignore
+
 [init]
 	defaultBranch = main
+
+[advice]
+  detachedHead = false
+
+[user]
+	name = timhall
+	email = tim.hall.engr@gmail.com

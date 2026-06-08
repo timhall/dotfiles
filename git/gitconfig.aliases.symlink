@@ -6,69 +6,62 @@
 #    path = ~/.gitconfig.aliases
 #
 # If you don't have any existing includes, you can add this via the following command
-# 
+#
 #   git config --global include.path ~/.gitconfig.aliases
 #
 
 [alias]
-    abort = rebase --abort
-    aliases = "!git config -l | grep ^alias\\. | cut -c 7-"
-    amend = commit -a --amend
-    # Deletes all branches merged into the specified branch (or the default branch if no branch is specified)
-    bclean = "!f() { DEFAULT=$(git default); git branch --merged ${1-$DEFAULT} | grep -v " ${1-$DEFAULT}$" | xargs git branch -d; }; f"
-    # Switches to specified branch (or the dafult branch if no branch is specified), runs git up, then runs bclean.
-    bdone = "!f() { DEFAULT=$(git default); git checkout ${1-$DEFAULT} && git up && git bclean ${1-$DEFAULT}; }; f"
-    # Lists all branches including remote branches
-    branches = branch -a
-    browse = !git open
-    # Lists the files with the most churn
-    churn = !git --no-pager log --name-only --oneline | grep -v ' ' | sort | uniq -c | sort -nr | head
-    cleanup = clean -xdf -e *.DotSettings* -e s3_keys.ps1
-    # Stages every file then creates a commit with specified message
-    cm = !git add -A && git commit -m
-    co = checkout
-    cob = checkout -b
-    # Show list of files in a conflict state.
-    conflicts = !git diff --name-only --diff-filter=U
-    cp = cherry-pick
-    default = !git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'
-    delete = branch -d
-    # Discard changes to a file
-    discard = checkout --
-    ec = config --global -e
-    find = "!git ls-files | grep -i"
-    graph = log --graph -10 --branches --remotes --tags  --format=format:'%Cgreen%h %Creset• %<(75,trunc)%s (%cN, %cr) %Cred%d' --date-order
-    grep = grep -Ii
-    hist = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
-    history = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
-    # Shows the commit message and files changed from the latest commit
-    latest = "!git ll -1"
-    lds = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=short
-    lost = fsck --lost-found
-    # A better git log.
-    ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
-    ls-subtrees = !"git log | grep git-subtree-dir | awk '{ print $2 }'"
-    # Moves a set of commits from the current branch to another
-    migrate = "!f(){ DEFAULT=$(git default); CURRENT=$(git symbolic-ref --short HEAD); git checkout -b $1 && git branch --force $CURRENT ${3-$CURRENT@{u}} && git rebase --onto ${2-$DEFAULT} $CURRENT; }; f"
-    new = !git init && git symbolic-ref HEAD refs/heads/main
-    open = "!f(){ URL=$(git config remote.origin.url); open ${URL%.git}; }; f"
-    pr = "!f(){ URL=$(git config remote.origin.url); open ${URL%.git}/compare/$(git rev-parse --abbrev-ref HEAD); }; f"
-    publish = "!f() { git push origin $1 && git push drafts :$1 && git browse; }; f"
-    rba = rebase --abort
-    rbc = "!f(){ git add -A && git rebase --continue; }; f"
-    re = "!f(){ DEFAULT=$(git default); git fetch origin && git rebase origin/${1-$DEFAULT}; }; f"
-    remotes = remote -v
-    restore = "!f(){ git add -A && git commit -qm 'RESTORE SAVEPOINT'; git reset $1 --hard; }; f"
-    ri = "!f(){ DEFAULT=$(git default); git fetch origin && git rebase --interactive origin/${1-$DEFAULT}; }; f"
-    save = !git add -A && git commit -m 'SAVEPOINT'
-    set-origin = remote set-url origin
-    set-upstream = remote set-url upstream
-    st = status -s
-    stashes = stash list
-    sync = !git pull --rebase && git push
-    undo = reset HEAD~1 --mixed
-    # Unstage a file
-    unstage = reset -q HEAD --
-    up = !git pull --rebase --prune $@ && git submodule update --init --recursive
-    wip = commit -am "WIP"
-    wipe = "!f() { rev=$(git rev-parse ${1-HEAD}); git add -A && git commit --allow-empty -qm 'WIPE SAVEPOINT' && git reset $rev --hard; }; f"
+  # Check out branch with name (`git co branch`)
+  co = checkout
+
+  # Check out _new_ branch with name (`git cob new-branch`)
+  cob = checkout -b
+
+  # Add all files and commit (`git cm "Add files and commit")
+  cm = !git add -A && git commit -m
+
+  # Pull in remote changes (pull with rebase)
+  up = !git pull --rebase --prune $@ && git submodule update --init --recursive
+
+  # Sync local to remote (pull and push)
+  sync = !git pull --rebase && git push
+
+  # Merge latest default branch (fetch and merge)
+  ml = "!f(){ DEFAULT=$(git default); git fetch origin && git merge origin/${1-$DEFAULT}; }; f"
+
+  # Amend previous commit
+  amend = commit -a --amend --no-edit
+
+  # Force with lease
+  force = push --force-with-lease
+
+  # Clean up branches
+  bclean = "!f() { DEFAULT=$(git default); git merged-squashed ${1-$DEFAULT} | grep -v \"^Checking\" | grep -v \"^$\" | cut -d\" \" -f1 | xargs -r git branch -D; }; f"
+
+  # Switches to specified branch / default branch, runs `git up`, then runs `git bclean`
+  bdone = "!f() { DEFAULT=$(git default); git checkout ${1-$DEFAULT} && git up && git bclean ${1-$DEFAULT}; }; f"
+
+  # Show list of files in a conflict state
+  conflicts = !git diff --name-only --diff-filter=U
+
+  # Rebase: abort
+  rba = rebase --abort
+
+  # Rebase: add all and continue
+  rbc = "!f(){ git add -A && git rebase --continue; }; f"
+
+  # Make a "WIP" commit
+  save = !git cm 'WIP' --no-verify
+
+  # Undo last commit
+  undo = reset HEAD~1 --mixed
+
+  # Comiit and push changeset
+  changeset = !git cm 'chore: changeset'
+
+  cp = cherry-pick
+  unstage = reset -q HEAD --
+
+  default = !git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'
+  aliases = "!f() {\n  awk \"\n    /^[[:space:]]*#[[:space:]]*[0-9]+[a-z]?\\./ {\n      # Numbered comment line\n      gsub(/^[[:space:]]*#[[:space:]]*/, \\\"\\\");\n      desc = \\$0;\n      next;\n    }\n    /^[[:space:]]*#[[:space:]]+[A-Z]/ {\n      # Non-numbered descriptive comment (starts with capital letter)\n      gsub(/^[[:space:]]*#[[:space:]]*/, \\\"\\\");\n      desc = \\$0;\n      next;\n    }\n    /^[[:space:]]*#[[:space:]]*\\`git / {\n      # Example usage line\n      gsub(/^[[:space:]]*#[[:space:]]*/, \\\"\\\");\n      example = \\$0;\n      next;\n    }\n    /^[[:space:]]*[a-z][a-z0-9-]+ = / {\n      # Alias definition\n      split(\\$0, parts, \\\" = \\\");\n      cmd = parts[1];\n      gsub(/^[[:space:]]+|[[:space:]]+\\$/, \\\"\\\", cmd);\n      if (desc != \\\"\\\") {\n        printf \\\"  %-10s%s\\n\\\", cmd, desc;\n        if (example != \\\"\\\") {\n          printf \\\"  %-10s%s\\n\\\", \\\"\\\", example;\n          example = \\\"\\\";\n        }\n        desc = \\\"\\\";\n      }\n    }\n  \" ~/.gitconfig.aliases;\n}; f"
+  merged-squashed = "!f() {\n  DEFAULT=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed \"s@^refs/remotes/origin/@@\");\n  TARGET=${1:-${DEFAULT:-main}};\n  \n  echo \"Checking for branches merged (including squash) into $TARGET...\";\n  echo \"\";\n  \n  git checkout -q \"$TARGET\" 2>/dev/null;\n  git branch --format=\"%(refname:short)\" | while read branch; do\n    if [ \"$branch\" != \"$TARGET\" ]; then\n      # Method 1: Check if truly merged\n      if git merge-base --is-ancestor \"$branch\" \"$TARGET\" 2>/dev/null; then\n        if [ \"$(git rev-parse \"$branch\")\" = \"$(git merge-base \"$branch\" \"$TARGET\")\" ]; then\n          echo \"$branch\";\n          continue;\n        fi\n      fi\n      \n      # Method 2: Check by commit message (squash merge detection)\n      msg=$(git log --format=%s -n 1 \"$branch\" 2>/dev/null);\n      if [ -n \"$msg\" ]; then\n        if git log \"$TARGET\" --format=%s | grep -q -F \"$msg\"; then\n          echo \"$branch (squash-merged)\";\n          continue;\n        fi\n      fi\n      \n      # Method 3: Check if GitHub CLI is available and branch has merged PR\n      if command -v gh >/dev/null 2>&1; then\n        pr_state=$(gh pr list --state merged --head \"$branch\" --json state --jq \".[0].state\" 2>/dev/null);\n        if [ \"$pr_state\" = \"MERGED\" ]; then\n          echo \"$branch (PR merged)\";\n        fi\n      fi\n    fi\n  done;\n}; f"
