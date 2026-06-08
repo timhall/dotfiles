@@ -6,17 +6,43 @@
 [includeIf "gitdir:~/dev/timhall/"]
 	path = ~/.gitconfig.personal
 
+[user]
+	name = timhall
+	email = tim.hall.engr@gmail.com
+
+[advice]
+	detachedHead = false
+
+[branch]
+	sort = -committerdate
+
 [color]
-	diff = auto
-	status = auto
-	branch = auto
-	ui = true
+	ui = auto
+
+[column]
+	ui = auto
+
+[commit]
+	verbose = true
+
+[core]
+	editor = zed --wait
+	excludesfile = ~/.gitignore
 
 [credential]
 	helper = osxkeychain
 
+[diff]
+	algorithm = histogram
+	colorMoved = zebra
+	mnemonicPrefix = true
+	renames = copies
+
 [difftool]
 	prompt = false
+
+[fetch]
+	prune = true
 
 [filter "lfs"]
 	clean = git-lfs clean -- %f
@@ -24,40 +50,33 @@
 	process = git-lfs filter-process
 	required = true
 
+[init]
+	defaultBranch = main
+
+[merge]
+	conflictStyle = zdiff3
+
 [mergetool]
 	keepBackup = false
 
 [pager]
 	branch = false
 
-[push]
-	# See `git help config` (search for push.default)
-	# for more information on different options of the below setting.
-	#
-	# Setting to git 2.0 default to suppress warning message
-	default = simple
-	autoSetupRemote = true
-
-[rerere]
-	enabled = true
-
 [pull]
 	rebase = true
+
+[push]
+	default = simple
+	autoSetupRemote = true
+	followTags = true
 
 [rebase]
 	autostash = true
 	autosquash = true
+	updateRefs = true
 
-[core]
-	editor = zed --wait
-	excludesfile = /Users/tim.hall/.gitignore
+[rerere]
+	enabled = true
 
-[init]
-	defaultBranch = main
-
-[advice]
-  detachedHead = false
-
-[user]
-	name = timhall
-	email = tim.hall.engr@gmail.com
+[tag]
+	sort = version:refname
