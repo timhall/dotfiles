@@ -1,13 +1,13 @@
 # Package manifest for `brew bundle`, run by the provisioning script on every
 # `chezmoi apply` where this file has changed.
 
-# Casks are installed with --adopt so an app already present at the
-# destination is taken over rather than reinstalled.
+# Casks install with --adopt, so an app already at the destination is taken
+# over rather than reinstalled.
 
 tap "docker/tap", trusted: true
 tap "libsql/sqld"
 
-brew "aom"
+# Tools
 brew "awscli"
 brew "chezmoi"
 brew "circleci"
@@ -17,24 +17,25 @@ brew "gh"
 brew "ghostscript"
 brew "imagemagick"
 brew "jpeg-xl"
-brew "libheif"
-brew "libtiff"
 brew "llvm@16"
 brew "mkcert"
 brew "mole"
-brew "openjpeg"
-brew "openssl@3"
 brew "pngcrush"
 brew "pyenv"
-brew "python@3.12"
+brew "uv"
+brew "zig"
+brew "libsql/sqld/sqld-beta"
+
+# pyenv needs these present to compile Python. Some are also pulled in as
+# dependencies elsewhere; they are listed so removing an unrelated formula
+# cannot quietly break python builds.
+brew "openssl@3"
 brew "readline"
 brew "sqlite3"
-brew "uv"
-brew "webp"
 brew "xz"
-brew "zig"
 brew "zlib"
 
+# Applications
 cask "1password"
 cask "1password-cli"
 cask "aws-vault-binary"
@@ -48,35 +49,3 @@ cask "raycast"
 cask "slack"
 cask "temurin@21"
 cask "zed"
-
-vscode "adpyke.codesnap"
-vscode "astro-build.astro-vscode"
-vscode "biomejs.biome"
-vscode "bradlc.vscode-tailwindcss"
-vscode "britesnow.vscode-toggle-quotes"
-vscode "dbaeumer.vscode-eslint"
-vscode "denoland.vscode-deno"
-vscode "docker.docker"
-vscode "editorconfig.editorconfig"
-vscode "esbenp.prettier-vscode"
-vscode "fabiospampinato.vscode-open-multiple-files"
-vscode "flowtype.flow-for-vscode"
-vscode "github.copilot-chat"
-vscode "github.github-vscode-theme"
-vscode "github.vscode-github-actions"
-vscode "golang.go"
-vscode "graphql.vscode-graphql"
-vscode "graphql.vscode-graphql-syntax"
-vscode "ms-azuretools.vscode-containers"
-vscode "ms-azuretools.vscode-docker"
-vscode "ms-vscode-remote.remote-containers"
-vscode "pnp.polacode"
-vscode "postman.postman-for-vscode"
-vscode "rust-lang.rust-analyzer"
-vscode "statelyai.stately-vscode"
-vscode "streetsidesoftware.code-spell-checker"
-vscode "svelte.svelte-vscode"
-vscode "tamasfe.even-better-toml"
-vscode "tauri-apps.tauri-vscode"
-vscode "unifiedjs.vscode-mdx"
-vscode "yoavbls.pretty-ts-errors"
