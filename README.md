@@ -41,6 +41,11 @@ it is identical everywhere.
 A file earns template status only when a value truly differs between machines.
 A path appearing in it is not enough.
 
+The one `.tmpl` in the repo is the package script, and it is not a dotfile: it
+templates only the Brewfile digests that tell chezmoi when to re-run it. Where
+machines genuinely differ, the marker file `~/.config/dotfiles-work` gates the
+work package list, which keeps that difference out of chezmoi's data entirely.
+
 ## Day-to-day
 
 | Task                                                    | Command                                                 |
@@ -60,7 +65,7 @@ and push as usual, or use `chezmoi git -- <args>` / `chezmoi cd`.
 ## What's here
 
 - **shell**: `.zshenv` (PATH and toolchain), `.zshrc` (aliases and shell
-  integration), `.zprofile` (secrets, seeded once; see below).
+  integration), `.zshenv.local` (secrets, seeded once; see below).
 - **git**: `.gitconfig`, `.gitconfig.aliases`, `.gitignore`.
 - **ssh**: `.ssh/config`.
 - **`dot_claude/`** -> `~/.claude/`: Claude Code global config. `CLAUDE.md` and
@@ -68,20 +73,25 @@ and push as usual, or use `chezmoi git -- <args>` / `chezmoi cd`.
 - **`.config/zed/`**: `settings.json` and `keymap.json`.
 - **`.npmrc`**: reads `${NPM_TOKEN}` from the environment rather than storing a
   token, so npm and yarn share one value and the repo stays clean.
-- **`Brewfile`** and three `run_` scripts: install Homebrew, reconcile packages,
-  and set macOS defaults.
+- **`Brewfile`**, **`Brewfile.work`**, and three `run_` scripts: install
+  Homebrew, reconcile packages, and set macOS defaults.
 
 ## After a fresh install
 
 What `chezmoi apply` can't do, in dependency order. Everything here either
 needs a browser, a password, or a GUI toggle no script can reach.
 
-- [ ] **Sign in to 1Password.** The Brewfile installs it. Nothing below that
-      needs a token can happen first.
-- [ ] **Fill in `~/.zprofile`** with `CIRCLECI_TOKEN` and `NPM_TOKEN` from
-      1Password. It ships with placeholders, and chezmoi creates it only when
-      absent and never overwrites it, so real values are safe there. `~/.npmrc`
-      reads `${NPM_TOKEN}`, so npm and yarn both break until this is done.
+- [ ] **On a work machine, `touch ~/.config/dotfiles-work` and re-run
+      `chezmoi apply`.** That marker is the only thing distinguishing the two
+      machine types; it gates `Brewfile.work` (1Password, Slack, Postman,
+      CircleCI, aws-vault, and the Docker sandbox tap). Do it before the token
+      step below if you keep those tokens in 1Password.
+- [ ] **Fill in `~/.zshenv.local`** with `CIRCLECI_TOKEN` and `NPM_TOKEN`.
+      Wherever you keep them (1Password, Apple Passwords, or freshly
+      minted) is a per-machine decision. The file ships with placeholders, and chezmoi
+      creates it only when absent and never overwrites it, so real values are
+      safe there. `~/.npmrc` resolves `${NPM_TOKEN}`, so anything touching a
+      private package fails until this is done; public installs work regardless.
 - [ ] **`gh auth login`.** GitHub credentials are generated per machine rather
       than carried in the repo.
 - [ ] **Clone the repos on `PATH`.** `.zshenv` adds `~/dev/scripts/bin`,
@@ -93,15 +103,17 @@ needs a browser, a password, or a GUI toggle no script can reach.
       reach them without granting the terminal Full Disk Access. That grant
       would give every script you run access to Mail, Messages, and every app
       container on the machine, which is not a fair trade for one checkbox.
-- [ ] **Sign in to the rest**: Slack, Chrome, Postman, Docker Desktop.
+- [ ] **Sign in to the rest**: Chrome, Docker Desktop, and on a work machine
+      Slack and Postman.
 - [ ] **Log out and back in** so dark mode and the login-time defaults apply.
 
 ## What's _not_ synced
 
 No secrets in any form, not even encrypted. The repo is public, so ciphertext
 in it would be a permanent bet on the cipher and the key. Credentials are either
-generated per machine by their own tool (`gh auth login`) or typed once from
-1Password into `~/.zprofile`.
+generated per machine by their own tool (`gh auth login`) or typed once into
+`~/.zshenv.local`, which is sourced from `.zshenv` so every shell sees them,
+including the non-login shells that agents spawn.
 
 `~/.claude/settings.local.json` is machine-local scratch, auto-filled by
 "always allow" prompts, and is chezmoi-ignored on purpose (see

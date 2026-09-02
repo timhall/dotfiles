@@ -1,12 +1,13 @@
 #!/bin/sh
 #
-# Reconcile installed packages against the Brewfile.
+# Reconcile installed packages against the Brewfiles.
 #
-# The hash below is what makes this fire: the script body never changes when
-# the Brewfile does, so without it chezmoi would see identical contents and
-# skip the run.
+# The hashes below are what make this fire: the script body never changes when
+# a Brewfile does, so without them chezmoi would see identical contents and
+# skip the run. Both files are hashed, so editing either one re-runs this.
 #
-# Brewfile hash: {{ include "Brewfile" | sha256sum }}
+# Brewfile hash:      {{ include "Brewfile" | sha256sum }}
+# Brewfile.work hash: {{ include "Brewfile.work" | sha256sum }}
 
 set -e
 
@@ -18,3 +19,11 @@ set -e
 echo "› brew bundle"
 HOMEBREW_CASK_OPTS="--adopt" brew bundle install --no-upgrade \
   --file="{{ .chezmoi.sourceDir }}/Brewfile"
+
+# Work-only packages. The marker is a plain file rather than chezmoi data, so
+# the repo keeps zero templates and `chezmoi re-add` stays universal.
+if [ -f "$HOME/.config/dotfiles-work" ]; then
+  echo "› brew bundle (work)"
+  HOMEBREW_CASK_OPTS="--adopt" brew bundle install --no-upgrade \
+    --file="{{ .chezmoi.sourceDir }}/Brewfile.work"
+fi

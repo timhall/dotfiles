@@ -15,3 +15,4 @@
 # Repo documentation and script inputs, not dotfiles.
 README.md
 Brewfile
+Brewfile.work

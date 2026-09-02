@@ -1,0 +1,13 @@
+# Work-machine packages, installed only when ~/.config/dotfiles-work exists.
+# See the provisioning script and the README's fresh-install checklist.
+
+tap "docker/tap", trusted: true
+
+brew "circleci"
+
+cask "1password"
+cask "1password-cli"
+cask "aws-vault-binary"
+cask "docker/tap/sbx", trusted: true
+cask "postman"
+cask "slack"

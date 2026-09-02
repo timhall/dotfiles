@@ -4,12 +4,9 @@
 # Casks install with --adopt, so an app already at the destination is taken
 # over rather than reinstalled.
 
-tap "docker/tap", trusted: true
-
 # Tools
 brew "awscli"
 brew "chezmoi"
-brew "circleci"
 brew "ffmpeg"
 brew "fnm"
 brew "gh"
@@ -33,15 +30,9 @@ brew "xz"
 brew "zlib"
 
 # Applications
-cask "1password"
-cask "1password-cli"
-cask "aws-vault-binary"
 cask "docker-desktop"
-cask "docker/tap/sbx", trusted: true
 cask "ghostty"
 cask "google-chrome"
 cask "obsidian"
-cask "postman"
 cask "raycast"
-cask "slack"
 cask "zed"
