@@ -12,9 +12,6 @@
 .zsh_history
 .zsh_sessions
 
-# Holman-era topics not yet migrated to chezmoi. Remove each as it's converted.
+# Repo documentation and script inputs, not dotfiles.
 README.md
-bin
-homebrew
-macos
-script
+Brewfile

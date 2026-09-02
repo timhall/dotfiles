@@ -1,0 +1,16 @@
+#!/bin/sh
+#
+# Reconcile installed packages against the Brewfile.
+#
+# The hash below is what makes this fire: the script body never changes when
+# the Brewfile does, so without it chezmoi would see identical contents and
+# skip the run.
+#
+# Brewfile hash: {{ include "Brewfile" | sha256sum }}
+
+set -e
+
+[ "$(uname)" = "Darwin" ] || exit 0
+
+echo "› brew bundle"
+HOMEBREW_CASK_OPTS="--adopt" brew bundle --file="{{ .chezmoi.sourceDir }}/Brewfile"
