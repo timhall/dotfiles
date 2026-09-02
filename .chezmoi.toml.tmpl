@@ -1,7 +1,0 @@
-{{- $vault := promptStringOnce . "vault" "Notes vault path" "~/Documents/notes" -}}
-{{- $todo := promptStringOnce . "todo" "Todo file path" "~/todo.md" -}}
-sourceDir = "~/dev/timhall/dotfiles"
-
-[data]
-    vault = {{ $vault | quote }}
-    todo = {{ $todo | quote }}

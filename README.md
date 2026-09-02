@@ -4,39 +4,42 @@ Your dotfiles are how you personalize your system. These are mine — machine co
 
 ## Requirements
 
+Xcode Command Line Tools, which can't be scripted — it opens a GUI dialog:
+
 ```sh
-brew install chezmoi
+xcode-select --install
 ```
+
+Everything else, including Homebrew, is installed by `chezmoi apply`.
 
 ## New machine
 
-The source directory is pinned to `~/dev/timhall/dotfiles` (set in
-`.chezmoi.toml.tmpl`), so clone it there:
-
 ```sh
-git clone https://github.com/timhall/dotfiles.git ~/dev/timhall/dotfiles
-chezmoi init --source ~/dev/timhall/dotfiles
-chezmoi diff            # preview what would change in $HOME
-chezmoi apply -v        # write it
+sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply timhall
 ```
 
-`init` prompts for the machine-specific paths below — press Enter to accept the
-defaults. After the first `init`, chezmoi remembers the source dir, so plain
-`chezmoi` commands work from anywhere.
+That installs chezmoi, clones this repo to `~/.local/share/chezmoi`, runs the
+provisioning scripts, and writes `$HOME`. There is nothing to install first —
+`brew install chezmoi` would be circular, since chezmoi is what installs
+Homebrew.
 
-## Machine-specific values
+To look before it writes, drop `--apply`, then run `chezmoi diff` and
+`chezmoi apply -v` separately.
 
-Templated via chezmoi's data, prompted on `init`, stored in
-`~/.config/chezmoi/chezmoi.toml`:
+## No templates
 
-| Variable | Prompt           | Default             |
-| -------- | ---------------- | ------------------- |
-| `vault`  | Notes vault path | `~/Documents/notes` |
-| `todo`   | Todo file path   | `~/todo.md`         |
+There are none, and that's deliberate. `chezmoi re-add` — the one command that
+pulls a live edit back into the repo — refuses to touch templates, so every
+templated file leaves that fast path permanently and drifts instead.
 
-Referenced in templates as `{{ .vault }}` / `{{ .todo }}`. To
-change them later, re-run `chezmoi init` (re-prompts) or edit
-`~/.config/chezmoi/chezmoi.toml` directly.
+Where something genuinely has to vary, use the tool's own local-override
+mechanism rather than a chezmoi template: git `[include]` and
+`includeIf gitdir:`, zsh `source`, `CLAUDE.md` `@import`, Claude's
+`settings.local.json`. Routing by directory beats routing by machine, because
+it is identical everywhere.
+
+A file earns template status only when a value truly differs between machines —
+never merely because a path appears in it.
 
 ## Day-to-day
 
@@ -49,8 +52,10 @@ change them later, re-run `chezmoi init` (re-prompts) or edit
 | Start managing a new file                               | `chezmoi add ~/.somefile`                               |
 | Make a file a template                                  | `chezmoi chattr +template ~/.somefile`                  |
 
-The source is a normal git repo — `cd ~/dev/timhall/dotfiles` and commit/push as
-usual (or `chezmoi git -- <args>`).
+The source lives at `~/.local/share/chezmoi`, chezmoi's default. A symlink at
+`~/dev/timhall/dotfiles` points to it, so it sits alongside everything else in
+`~/dev` for editing — same directory, two paths. It is a normal git repo; commit
+and push as usual, or use `chezmoi git -- <args>` / `chezmoi cd`.
 
 ## What's here
 
