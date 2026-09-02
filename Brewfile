@@ -5,7 +5,6 @@
 # over rather than reinstalled.
 
 tap "docker/tap", trusted: true
-tap "libsql/sqld"
 
 # Tools
 brew "awscli"
@@ -14,7 +13,6 @@ brew "circleci"
 brew "ffmpeg"
 brew "fnm"
 brew "gh"
-brew "ghostscript"
 brew "imagemagick"
 brew "jpeg-xl"
 brew "llvm@16"
@@ -24,7 +22,6 @@ brew "pngcrush"
 brew "pyenv"
 brew "uv"
 brew "zig"
-brew "libsql/sqld/sqld-beta"
 
 # pyenv needs these present to compile Python. Some are also pulled in as
 # dependencies elsewhere; they are listed so removing an unrelated formula
@@ -47,5 +44,4 @@ cask "obsidian"
 cask "postman"
 cask "raycast"
 cask "slack"
-cask "temurin@21"
 cask "zed"
