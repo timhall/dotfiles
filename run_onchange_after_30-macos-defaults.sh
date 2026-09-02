@@ -7,8 +7,8 @@
 # Check https://macos-defaults.com before adding one; a lot of the lists that
 # circulate target much older releases and fail silently.
 #
-# Safari is deliberately absent. Its preferences live in a sandboxed container
-# that TCC blocks, so `defaults write com.apple.Safari` does nothing unless the
+# Safari is mostly absent. Its preferences live in a sandboxed container that
+# TCC blocks, so `defaults write com.apple.Safari` does nothing unless the
 # calling terminal has Full Disk Access. To add one, grant that, then diff
 # `plutil -p ~/Library/Containers/com.apple.Safari/Data/Library/Preferences/com.apple.Safari.plist`
 # before and after toggling the setting in Safari, and use the key that changes.
@@ -49,5 +49,24 @@ defaults write com.apple.finder ShowPathbar -bool true
 defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 chflags nohidden ~/Library
 
-# Finder and Dock only reread their preferences on launch.
-killall Finder Dock 2>/dev/null || true
+# Menu bar clock: digital, 12-hour with AM/PM, day of week, no date, no seconds.
+defaults write com.apple.menuextra.clock IsAnalog -bool false
+defaults write com.apple.menuextra.clock ShowAMPM -bool true
+defaults write com.apple.menuextra.clock ShowDayOfWeek -bool true
+defaults write com.apple.menuextra.clock ShowDate -int 0
+defaults write com.apple.menuextra.clock ShowSeconds -bool false
+
+# Show where the pointer clicked in screen recordings.
+defaults write com.apple.screencapture showsClicks -bool true
+
+# Safari only takes this if the terminal has Full Disk Access, so read it back
+# rather than let it fail silently the way the old settings did.
+defaults write com.apple.Safari ShowFullURLInSmartSearchField -bool true 2>/dev/null || true
+if [ "$(defaults read com.apple.Safari ShowFullURLInSmartSearchField 2>/dev/null)" != "1" ]; then
+  echo "  ! Safari: no Full Disk Access, so 'show full website address' was not set."
+  echo "    Set it by hand in Safari > Settings > Advanced, or grant the terminal"
+  echo "    Full Disk Access and re-run."
+fi
+
+# These only reread their preferences on launch.
+killall Finder Dock ControlCenter 2>/dev/null || true
