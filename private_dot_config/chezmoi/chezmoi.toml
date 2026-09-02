@@ -1,0 +1,17 @@
+# chezmoi's own configuration, managed by chezmoi as an ordinary file rather
+# than generated from a .chezmoi.toml.tmpl, which would reintroduce templating
+# and an init-time prompt for values that never differ between machines.
+#
+# On a brand new machine this file does not exist during the first apply, so
+# the settings below take effect from the second command onward.
+
+[git]
+    # `chezmoi re-add` stages and commits in one step, so a live edit pulled
+    # back into the repo cannot sit uncommitted and be lost.
+    autoAdd = true
+    autoCommit = true
+
+    # autoPush stays off deliberately. Publishing is a separate decision, and
+    # an automatic push would bypass the `Bash(git push*)` deny rule in
+    # ~/.claude/settings.json that keeps agents from publishing unreviewed.
+    autoPush = false

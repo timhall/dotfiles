@@ -53,7 +53,7 @@ work package list, which keeps that difference out of chezmoi's data entirely.
 | Preview pending changes                                 | `chezmoi diff`                                          |
 | Apply source -> `$HOME`                                 | `chezmoi apply -v`                                      |
 | Edit a managed file (edits source, then apply)          | `chezmoi edit ~/.claude/settings.json && chezmoi apply` |
-| Pull an ad-hoc edit from a live file back into the repo | `chezmoi re-add`                                        |
+| Pull an ad-hoc edit from a live file back into the repo | `chezmoi re-add` (auto-commits)                         |
 | Start managing a new file                               | `chezmoi add ~/.somefile`                               |
 | Make a file a template                                  | `chezmoi chattr +template ~/.somefile`                  |
 
@@ -75,6 +75,9 @@ and push as usual, or use `chezmoi git -- <args>` / `chezmoi cd`.
   token, so npm and yarn share one value and the repo stays clean.
 - **`Brewfile`**, **`Brewfile.work`**, and three `run_` scripts: install
   Homebrew, reconcile packages, and set macOS defaults.
+- **`.config/chezmoi/chezmoi.toml`**: chezmoi's own settings. `re-add` stages
+  and commits automatically so a rescued edit cannot sit uncommitted; pushing
+  stays manual.
 
 ## After a fresh install
 
