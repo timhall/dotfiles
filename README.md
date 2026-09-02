@@ -73,16 +73,28 @@ and push as usual, or use `chezmoi git -- <args>` / `chezmoi cd`.
 
 ## After a fresh install
 
-Two things `chezmoi apply` deliberately does not do.
+What `chezmoi apply` can't do, in dependency order. Everything here either
+needs a browser, a password, or a GUI toggle no script can reach.
 
-**Fill in `~/.zprofile`.** It ships with placeholders and carries the
-`CIRCLECI_TOKEN` and `NPM_TOKEN` values, which live in 1Password. chezmoi
-creates that file only if it is absent and never overwrites it, so real values
-are safe there. The file itself tells you which items to look for.
-
-**Clone the repos on `PATH`.** `.zshenv` adds `~/dev/scripts/bin`,
-`~/dev/timhall/skills/bin`, and `~/dev/scratch/project-guide/packages/cli/dist`.
-Missing entries are harmless, but the tools won't be there until you clone them.
+- [ ] **Sign in to 1Password.** The Brewfile installs it. Nothing below that
+      needs a token can happen first.
+- [ ] **Fill in `~/.zprofile`** with `CIRCLECI_TOKEN` and `NPM_TOKEN` from
+      1Password. It ships with placeholders, and chezmoi creates it only when
+      absent and never overwrites it, so real values are safe there. `~/.npmrc`
+      reads `${NPM_TOKEN}`, so npm and yarn both break until this is done.
+- [ ] **`gh auth login`.** GitHub credentials are generated per machine rather
+      than carried in the repo.
+- [ ] **Clone the repos on `PATH`.** `.zshenv` adds `~/dev/scripts/bin`,
+      `~/dev/timhall/skills/bin`, and
+      `~/dev/scratch/project-guide/packages/cli/dist`. Missing entries are
+      harmless, but the tools aren't there until you clone them.
+- [ ] **Safari -> Settings -> Advanced -> "Show full website address".** Safari's
+      preferences sit in a TCC-protected container, so `defaults write` cannot
+      reach them without granting the terminal Full Disk Access. That grant
+      would give every script you run access to Mail, Messages, and every app
+      container on the machine, which is not a fair trade for one checkbox.
+- [ ] **Sign in to the rest**: Slack, Chrome, Postman, Docker Desktop.
+- [ ] **Log out and back in** so dark mode and the login-time defaults apply.
 
 ## What's _not_ synced
 
