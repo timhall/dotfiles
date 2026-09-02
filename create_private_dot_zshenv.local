@@ -1,16 +1,20 @@
 #
-# Secrets — machine-local, never committed
+# Secrets, machine-local, never committed
+#
+# Sourced from ~/.zshenv rather than ~/.zprofile, so these reach every zsh
+# invocation. .zprofile only runs for login shells, which leaves out the
+# non-login shells that agents and scripts spawn.
 #
 # chezmoi creates this file only if it does not already exist, and never
 # overwrites it afterwards, so real values are safe here. The repo is public;
 # nothing secret goes in it.
 #
-# Fill both from 1Password, then start a new login shell:
+# Fill both from 1Password, then start a new shell:
 #
 #   CIRCLECI_TOKEN  CircleCI -> Personal API Tokens
 #   NPM_TOKEN       npmjs.com -> Access Tokens (granular, long-lived).
 #                   Read by yarn directly, and by ~/.npmrc via ${NPM_TOKEN}.
-#                   `npm login` is not a substitute — it issues short-lived
+#                   `npm login` is not a substitute: it issues short-lived
 #                   tokens and writes only to ~/.npmrc.
 
 export CIRCLECI_TOKEN=replace-me

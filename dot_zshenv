@@ -1,11 +1,12 @@
 #
-# User Environment
+# .zshenv runs for every zsh invocation: login, non-login, interactive, and the
+# non-login shells that agents and scripts spawn. Anything that must be visible
+# to all of them belongs here rather than in .zprofile, which login shells alone
+# read, or .zshrc, which is interactive-only.
 #
 
-# (handled in .zprofile for interactive shells only)
-
 #
-# PATH (shared across interactive + non-interactive / agent shells)
+# PATH
 #
 
 # Homebrew
@@ -59,3 +60,10 @@ export PATH="$PATH:/Applications/Obsidian.app/Contents/MacOS"
 
 # Vite+ bin (https://viteplus.dev)
 . "$HOME/.vite-plus/env"
+
+#
+# Secrets
+#
+
+# Machine-local and never committed; chezmoi seeds it with placeholders once.
+[ -f "$HOME/.zshenv.local" ] && . "$HOME/.zshenv.local"
