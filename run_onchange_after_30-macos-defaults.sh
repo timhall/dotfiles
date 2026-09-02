@@ -23,12 +23,29 @@ echo "› macOS defaults"
 defaults write -g ApplePressAndHoldEnabled -bool false
 defaults write NSGlobalDomain KeyRepeat -int 1
 
+# No autocorrect or smart substitution; they mangle code and commit messages.
+defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
+
+# Dark mode. Takes effect at next login; the UI toggle applies it immediately.
+defaults write NSGlobalDomain AppleInterfaceStyle -string Dark
+
 # AirDrop over every interface, not just Wi-Fi.
 defaults write com.apple.NetworkBrowser BrowseAllInterfaces 1
+
+# Dock: left edge, hidden until needed, small tiles, no recents, no launch bounce.
+defaults write com.apple.dock orientation -string left
+defaults write com.apple.dock autohide -bool true
+defaults write com.apple.dock tilesize -int 48
+defaults write com.apple.dock show-recents -bool false
+defaults write com.apple.dock launchanim -bool false
 
 # Finder: list view, and hide nothing.
 defaults write com.apple.finder FXPreferredViewStyle Nlsv
 defaults write com.apple.finder AppleShowAllFiles -bool true
+defaults write com.apple.finder ShowPathbar -bool true
 defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 chflags nohidden ~/Library
 
