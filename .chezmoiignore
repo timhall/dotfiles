@@ -1,6 +1,13 @@
 # Machine-local scratch — auto-filled by "always allow" prompts, never synced.
 .claude/settings.local.json
 
+# Zed writes caches and history alongside its two real config files.
+.config/zed/conversations
+.config/zed/embeddings
+.config/zed/prompts
+.config/zed/themes
+.config/zed/settings_backup.json
+
 # Holman-era topics not yet migrated to chezmoi. Remove each as it's converted.
 README.md
 bin

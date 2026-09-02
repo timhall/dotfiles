@@ -1,0 +1,81 @@
+#
+# Include this in your own .gitconfig by using the
+# [include] directive with the path to this file
+#
+# [include]
+#    path = ~/.gitconfig.aliases
+#
+# If you don't have any existing includes, you can add this via the following command
+#
+#   git config --global include.path ~/.gitconfig.aliases
+#
+
+[alias]
+  # Check out branch with name (`git co branch`)
+  co = checkout
+
+  # Check out _new_ branch with name (`git cob new-branch`)
+  cob = checkout -b
+
+  # Add all files and commit (`git cm "Add files and commit")
+  cm = !git add -A && git commit -m
+
+  # Add all files and commit, skipping hooks (`git cmn "Add files and commit")
+  cmn = !git add -A && git commit --no-verify -m
+
+  # Pull in remote changes (pull with rebase)
+  up = !git pull --rebase --prune $@ && git submodule update --init --recursive
+
+  # Sync local to remote (pull and push)
+  sync = !git pull --rebase && git push
+
+  # Merge latest default branch (fetch and merge)
+  ml = "!f(){ DEFAULT=$(git default); git fetch origin && git merge origin/${1-$DEFAULT}; }; f"
+
+  # Rebase onto latest default branch (fetch and rebase)
+  rl = "!f(){ DEFAULT=$(git default); git fetch origin && git rebase origin/${1-$DEFAULT}; }; f"
+
+  # Amend previous commit
+  amend = commit -a --amend --no-edit
+
+  # Add all and amend previous commit
+  aamend = !git add -A && git amend
+
+  # Force with lease
+  force = push --force-with-lease
+
+  # List the branches `bclean` would delete, without deleting them
+  bclean-n = "!f() { git fetch --prune --quiet; git branch --format '%(refname:short) %(upstream:track) %(worktreepath)' | awk -v c=\"$(git branch --show-current)\" '$2 == \"[gone]\" && $3 == \"\" && $1 != c { print $1 }'; }; f"
+
+  # Clean up branches whose upstream is gone (PR merged + remote branch deleted)
+  bclean = "!f() { for b in $(git bclean-n); do echo \"deleting $b ($(git rev-parse --short $b))\"; git branch -D \"$b\"; done; }; f"
+
+  # List local branches already merged into the default branch (pipe to `xargs git branch -d`)
+  bmerged = "!f() { DEFAULT=$(git default); git fetch --quiet origin $DEFAULT; git branch --merged origin/$DEFAULT --format '%(refname:short) %(worktreepath)' | awk -v d=\"$DEFAULT\" -v c=\"$(git branch --show-current)\" '$2 == \"\" && $1 != d && $1 != c { print $1 }'; }; f"
+
+  # Switches to specified branch / default branch, runs `git up`, then runs `git bclean`
+  bdone = "!f() { DEFAULT=$(git default); git checkout ${1-$DEFAULT} && git up && git bclean; }; f"
+
+  # Show list of files in a conflict state
+  conflicts = !git diff --name-only --diff-filter=U
+
+  # Rebase: abort
+  rba = rebase --abort
+
+  # Rebase: add all and continue
+  rbc = "!f(){ git add -A && git rebase --continue; }; f"
+
+  # Make a "WIP" commit
+  save = !git cm 'WIP' --no-verify
+
+  # Undo last commit
+  undo = reset HEAD~1 --mixed
+
+  # Commit and push changeset
+  changeset = !git cm 'changeset'
+
+  cp = cherry-pick
+  unstage = reset -q HEAD --
+
+  default = !git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'
+  aliases = "!f() {\n  awk \"\n    /^[[:space:]]*#[[:space:]]*[0-9]+[a-z]?\\./ {\n      # Numbered comment line\n      gsub(/^[[:space:]]*#[[:space:]]*/, \\\"\\\");\n      desc = \\$0;\n      next;\n    }\n    /^[[:space:]]*#[[:space:]]+[A-Z]/ {\n      # Non-numbered descriptive comment (starts with capital letter)\n      gsub(/^[[:space:]]*#[[:space:]]*/, \\\"\\\");\n      desc = \\$0;\n      next;\n    }\n    /^[[:space:]]*#[[:space:]]*\\`git / {\n      # Example usage line\n      gsub(/^[[:space:]]*#[[:space:]]*/, \\\"\\\");\n      example = \\$0;\n      next;\n    }\n    /^[[:space:]]*[a-z][a-z0-9-]+ = / {\n      # Alias definition\n      split(\\$0, parts, \\\" = \\\");\n      cmd = parts[1];\n      gsub(/^[[:space:]]+|[[:space:]]+\\$/, \\\"\\\", cmd);\n      if (desc != \\\"\\\") {\n        printf \\\"  %-10s%s\\n\\\", cmd, desc;\n        if (example != \\\"\\\") {\n          printf \\\"  %-10s%s\\n\\\", \\\"\\\", example;\n          example = \\\"\\\";\n        }\n        desc = \\\"\\\";\n      }\n    }\n  \" ~/.gitconfig.aliases;\n}; f"

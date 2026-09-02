@@ -1,0 +1,9 @@
+**/.idea
+**/prompts
+**/worktrees
+**/.plans
+.zed
+
+**/.claude/settings.local.json
+
+**/.claude/.cc-writes/
