@@ -11,7 +11,6 @@
 # Holman-era topics not yet migrated to chezmoi. Remove each as it's converted.
 README.md
 bin
-git
 homebrew
 macos
 script
