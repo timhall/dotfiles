@@ -3,7 +3,15 @@
 # macOS defaults. `onchange` rather than `once`, so editing this file
 # re-applies it.
 #
-# Originally from holman's dotfiles, in turn from mathiasbynens.
+# Only settings verified to take effect on this macOS version belong here.
+# Check https://macos-defaults.com before adding one; a lot of the lists that
+# circulate target much older releases and fail silently.
+#
+# Safari is deliberately absent. Its preferences live in a sandboxed container
+# that TCC blocks, so `defaults write com.apple.Safari` does nothing unless the
+# calling terminal has Full Disk Access. To add one, grant that, then diff
+# `plutil -p ~/Library/Containers/com.apple.Safari/Data/Library/Preferences/com.apple.Safari.plist`
+# before and after toggling the setting in Safari, and use the key that changes.
 
 set -e
 
@@ -18,23 +26,11 @@ defaults write NSGlobalDomain KeyRepeat -int 1
 # AirDrop over every interface, not just Wi-Fi.
 defaults write com.apple.NetworkBrowser BrowseAllInterfaces 1
 
-# Finder: list view everywhere, show mounted volumes on the desktop.
+# Finder: list view, and hide nothing.
 defaults write com.apple.finder FXPreferredViewStyle Nlsv
-defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
-defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
+defaults write com.apple.finder AppleShowAllFiles -bool true
+defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 chflags nohidden ~/Library
-
-# Screensaver in the bottom-left hot corner.
-defaults write com.apple.dock wvous-bl-corner -int 5
-defaults write com.apple.dock wvous-bl-modifier -int 0
-
-# Safari: no bookmark bar, developer menus on.
-defaults write com.apple.Safari ShowFavoritesBar -bool false
-defaults write com.apple.Safari IncludeInternalDebugMenu -bool true
-defaults write com.apple.Safari IncludeDevelopMenu -bool true
-defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
-defaults write com.apple.Safari "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" -bool true
-defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
 
 # Finder and Dock only reread their preferences on launch.
 killall Finder Dock 2>/dev/null || true
