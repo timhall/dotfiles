@@ -97,6 +97,11 @@ needs a browser, a password, or a GUI toggle no script can reach.
       private package fails until this is done; public installs work regardless.
 - [ ] **`gh auth login`.** GitHub credentials are generated per machine rather
       than carried in the repo.
+- [ ] **Generate an SSH key and add it to GitHub**, if you want SSH remotes:
+      `ssh-keygen -t ed25519`, then `gh ssh-key add ~/.ssh/id_ed25519.pub`.
+      Nothing in this repo creates one. `~/.ssh/config` deliberately does not
+      name a key, because ssh already tries `id_ed25519` by default and skips
+      it silently when absent.
 - [ ] **Clone the repos on `PATH`.** `.zshenv` adds `~/dev/scripts/bin`,
       `~/dev/timhall/skills/bin`, and
       `~/dev/scratch/project-guide/packages/cli/dist`. Missing entries are
