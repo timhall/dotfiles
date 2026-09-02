@@ -12,5 +12,9 @@ set -e
 
 [ "$(uname)" = "Darwin" ] || exit 0
 
+# --no-upgrade keeps this to installing what is missing. Upgrading everything
+# outdated is a separate, deliberate `brew upgrade`, not a side effect of
+# editing the package list.
 echo "› brew bundle"
-HOMEBREW_CASK_OPTS="--adopt" brew bundle --file="{{ .chezmoi.sourceDir }}/Brewfile"
+HOMEBREW_CASK_OPTS="--adopt" brew bundle install --no-upgrade \
+  --file="{{ .chezmoi.sourceDir }}/Brewfile"
