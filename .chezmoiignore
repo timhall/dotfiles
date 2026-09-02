@@ -8,6 +8,10 @@
 .config/zed/themes
 .config/zed/settings_backup.json
 
+# Shell history and session state, not configuration.
+.zsh_history
+.zsh_sessions
+
 # Holman-era topics not yet migrated to chezmoi. Remove each as it's converted.
 README.md
 bin

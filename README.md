@@ -59,22 +59,48 @@ and push as usual, or use `chezmoi git -- <args>` / `chezmoi cd`.
 
 ## What's here
 
-- **`dot_claude/`** → `~/.claude/` — Claude Code global config: `CLAUDE.md`
-  (templated with `vault`/`todo`) and `settings.json` (curated permission
-  allowlist).
+- **shell** — `.zshenv` (PATH and toolchain), `.zshrc` (aliases and shell
+  integration), `.zprofile` (secrets, seeded once — see below).
+- **git** — `.gitconfig`, `.gitconfig.aliases`, `.gitignore`.
+- **ssh** — `.ssh/config`.
+- **`dot_claude/`** → `~/.claude/` — Claude Code global config: `CLAUDE.md` and
+  `settings.json` (curated permission allowlist).
+- **`.config/zed/`** — `settings.json` and `keymap.json`.
+- **`.npmrc`** — reads `${NPM_TOKEN}` from the environment rather than storing a
+  token, so npm and yarn share one value and the repo stays clean.
+
+## After a fresh install
+
+Two things `chezmoi apply` deliberately does not do.
+
+**Fill in `~/.zprofile`.** It ships with placeholders and carries the
+`CIRCLECI_TOKEN` and `NPM_TOKEN` values, which live in 1Password. chezmoi
+creates that file only if it is absent and never overwrites it, so real values
+are safe there. The file itself tells you which items to look for.
+
+**Clone the repos on `PATH`.** `.zshenv` adds `~/dev/scripts/bin`,
+`~/dev/timhall/skills/bin`, and `~/dev/scratch/project-guide/packages/cli/dist`.
+Missing entries are harmless, but the tools won't be there until you clone them.
 
 ## What's _not_ synced
+
+No secrets, in any form — not even encrypted. The repo is public, so ciphertext
+in it would be a permanent bet on the cipher and the key. Credentials are either
+generated per machine by their own tool (`gh auth login`) or typed once from
+1Password into `~/.zprofile`.
 
 `~/.claude/settings.local.json` is machine-local scratch — auto-filled by
 "always allow" prompts — and is chezmoi-ignored on purpose (see
 `.chezmoiignore`). Durable, portable grants belong in `settings.json`.
+
+Shell history, Zed's caches, and similar state are ignored too.
 
 ## Migration status
 
 Being converted from holman to chezmoi, one topic at a time. Not yet converted,
 and chezmoi-ignored until they are:
 
-- `bin/`, `git/`, `homebrew/`, `macos/`, `script/`
+- `bin/`, `homebrew/`, `macos/`, `script/`
 
 Remove each from `.chezmoiignore` as it's ported to chezmoi's source format. The
 live, still-bootstrapped holman checkout remains at `~/.dotfiles` until the

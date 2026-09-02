@@ -1,0 +1,17 @@
+#
+# Secrets — machine-local, never committed
+#
+# chezmoi creates this file only if it does not already exist, and never
+# overwrites it afterwards, so real values are safe here. The repo is public;
+# nothing secret goes in it.
+#
+# Fill both from 1Password, then start a new login shell:
+#
+#   CIRCLECI_TOKEN  CircleCI -> Personal API Tokens
+#   NPM_TOKEN       npmjs.com -> Access Tokens (granular, long-lived).
+#                   Read by yarn directly, and by ~/.npmrc via ${NPM_TOKEN}.
+#                   `npm login` is not a substitute — it issues short-lived
+#                   tokens and writes only to ~/.npmrc.
+
+export CIRCLECI_TOKEN=replace-me
+export NPM_TOKEN=replace-me
