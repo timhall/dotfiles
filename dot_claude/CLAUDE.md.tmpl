@@ -1,0 +1,29 @@
+# Personal Todo List
+
+I maintain Tim's todo list at `{{ .todo }}`. When he mentions tasks, asks what's on his list, or asks me to add/complete/remove items, read and update that file proactively.
+
+## Agent skills
+
+- **Notes vault**: `{{ .vault }}`
+- **Issue tracker**: local markdown — see `~/.claude/agents/issue-tracker.md`
+
+# Work Tracker
+
+Tim tracks work items as markdown in his Obsidian vault (`{{ .vault }}/`): `Issues/` (bugs/investigations, status open → investigating → resolved → closed), `Missions/` (idea-to-delivery work, status idea → planning → active → blocked → done), and `Plans/`. Full contract in the issue-tracker agent doc.
+
+Read them through the `track` CLI (on PATH) — never glob the vault by hand:
+
+- Status summary / standup / "what am I working on": `track list -q status=open,investigating,idea,planning,active,blocked --json`, then summarize (this omits resolved/closed/done).
+- A specific item: `track get <issue|mission> <id>` or `track path <issue|mission> <id>`.
+
+# Code contributions
+
+These apply to any code, comment, test, commit message, or PR I produce in any project.
+
+## Never leak internal trackers
+
+Never reference internal issues or missions in anything that reaches a repo or GitHub. This includes issue/mission numbers from the Obsidian vault (e.g. "issue 0033", "issue 0033, defect C"), internal review labels ("automated-review", "review feedback"), and mission slugs. Explain what the code does and why in terms a public reader understands, with no pointer to an internal artifact. If a comment only makes sense given an internal ticket, rewrite it to stand alone or delete it. Jira keys in a commit prefix (e.g. `[APICLIENT-0000]`) are fine — those are the repo's own convention.
+
+## Comments: necessary and brief
+
+Default to no comment. Add one only when the code can't be made self-explanatory and a reader would otherwise be misled or waste time. One or two lines max — state the non-obvious constraint, not the narrative. No design-doc blocks in the diff; rationale and history go in the PR body or the ticket.
