@@ -106,6 +106,21 @@ needs a browser, a password, or a GUI toggle no script can reach.
       `~/dev/timhall/skills/bin`, and
       `~/dev/scratch/project-guide/packages/cli/dist`. Missing entries are
       harmless, but the tools aren't there until you clone them.
+- [ ] **Install agent skills.** They are deliberately not in this repo; see
+      Related below. `npx skills add` prompts for which skills to take from
+      each repository, so this restores a chosen subset rather than everything:
+
+      ```sh
+      npx skills add timhall/skills        # hello, work, tracker, pair-programming
+      npx skills add mattpocock/skills
+      npx skills add vercel-labs/skills    # find-skills
+      npx skills add AminBlg/SimpleEnglish
+      ```
+
+      Skills land in `~/.agents/skills` and are linked into `~/.claude/skills`.
+      Note that `~/.agents/.skill-lock.json` tracks only third-party skills and
+      drifts from what is actually installed, so the list above is the reference,
+      not that file.
 - [ ] **Safari -> Settings -> Advanced -> "Show full website address".** Safari's
       preferences sit in a TCC-protected container, so `defaults write` cannot
       reach them without granting the terminal Full Disk Access. That grant
@@ -135,3 +150,9 @@ Agent _capabilities_ (skills and the `track` CLI) live in
 [timhall/skills](https://github.com/timhall/skills), installed separately via
 `npx skills add`. This repo carries the _config_; that repo carries the
 _behavior_. Seed `~/.claude/CLAUDE.md` from its `system-instructions.md`.
+
+Keeping skills out of here is deliberate. Most installed skills come from
+third-party repositories, vendoring them would mean owning content this repo
+did not author, and the restore path (`skills experimental_install`) reads a
+project-scoped `skills-lock.json` rather than the global lock file. The
+checklist above documents the four sources instead.
