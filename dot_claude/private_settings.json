@@ -1,0 +1,157 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(~/**)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(grep:*)",
+      "Bash(rg:*)",
+      "Bash(tail:*)",
+      "Bash(head:*)",
+      "Bash(wc:*)",
+      "Bash(sort:*)",
+      "Bash(uniq:*)",
+      "Bash(awk:*)",
+      "Bash(which:*)",
+      "Bash(echo:*)",
+      "Bash(pwd)",
+      "Bash(git:*)",
+      "Bash(pnpm:*)",
+      "Bash(* pnpm *)",
+      "Bash(npm:*)",
+      "Bash(npx:*)",
+      "Bash(yarn:*)",
+      "Bash(node:*)",
+      "Bash(ts-node:*)",
+      "Bash(vitest:*)",
+      "Bash(jest:*)",
+      "Bash(python:*)",
+      "Bash(python3:*)",
+      "Bash(gh:*)",
+      "Bash(track:*)",
+      "Bash(curl:*)",
+      "Bash(ln:*)",
+      "Bash(md5:*)",
+      "Bash(claude:*)",
+      "Bash(defuddle parse:*)",
+      "Bash(obsidian read:*)",
+      "WebSearch",
+      "WebFetch(domain:www.postman.com)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:blog.val.town)",
+      "WebFetch(domain:claude.com)",
+      "WebFetch(domain:docs.trmnl.com)",
+      "WebFetch(domain:help.trmnl.com)",
+      "mcp__plugin_slack_slack__slack_search_public_and_private",
+      "mcp__plugin_slack_slack__slack_search_public",
+      "mcp__plugin_slack_slack__slack_search_channels",
+      "mcp__plugin_slack_slack__slack_search_users",
+      "mcp__plugin_slack_slack__slack_read_thread",
+      "mcp__plugin_slack_slack__slack_read_channel",
+      "mcp__plugin_slack_slack__slack_read_user_profile",
+      "mcp__plugin_slack_slack__slack_send_message",
+      "mcp__plugin_atlassian_atlassian__getConfluencePage",
+      "mcp__plugin_atlassian_atlassian__getConfluencePageDescendants",
+      "mcp__plugin_atlassian_atlassian__getPagesInConfluenceSpace",
+      "mcp__plugin_atlassian_atlassian__getConfluenceSpaces",
+      "mcp__plugin_atlassian_atlassian__getJiraIssue",
+      "mcp__plugin_atlassian_atlassian__searchJiraIssuesUsingJql",
+      "mcp__plugin_atlassian_atlassian__searchConfluenceUsingCql",
+      "mcp__plugin_atlassian_atlassian__getAccessibleAtlassianResources",
+      "mcp__plugin_atlassian_atlassian__fetch",
+      "mcp__plugin_slack_slack__slack_read_file",
+      "Skill(update-config)"
+    ],
+    "deny": [
+      "Bash(git push*)"
+    ],
+    "defaultMode": "auto",
+    "additionalDirectories": [
+      "~/Documents/notes"
+    ]
+  },
+  "enabledPlugins": {
+    "obsidian@obsidian-skills": true,
+    "atlassian@claude-plugins-official": true,
+    "slack@claude-plugins-official": true
+  },
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": true,
+    "allowUnsandboxedCommands": true,
+    "network": {
+      "allowedDomains": [
+        "registry.npmjs.org",
+        "*.npmjs.org",
+        "github.com",
+        "api.github.com",
+        "codeload.github.com",
+        "*.githubusercontent.com",
+        "*.postmanlabs.com",
+        "*.getpostman.com"
+      ]
+    },
+    "filesystem": {
+      "allowWrite": [
+        "~/.local/state/fnm_multishells"
+      ]
+    },
+    "credentials": {
+      "files": [
+        {
+          "path": "~/.ssh",
+          "mode": "deny"
+        }
+      ]
+    },
+    "excludedCommands": [
+      "docker *",
+      "docker-compose *",
+      "prlctl *",
+      "aws-vault *",
+      "gh *"
+    ]
+  },
+  "attribution": {
+    "commit": "Assisted-by: Claude",
+    "pr": ""
+  },
+  "alwaysThinkingEnabled": true,
+  "theme": "light",
+  "skillOverrides": {
+    "v3-rebuild-fs": "off",
+    "v3-fs-to-v2": "off",
+    "find-skills": "off",
+    "codebase-design": "off",
+    "research": "off",
+    "domain-modeling": "off",
+    "wayfinder": "off",
+    "setup-matt-pocock-skills": "off",
+    "prototype": "off",
+    "to-spec": "off",
+    "improve-codebase-architecture": "off",
+    "triage": "off",
+    "check-translations": "off",
+    "supabase-realtime-checklist": "off",
+    "ask-matt": "off",
+    "fix-android-network": "off",
+    "implement": "off",
+    "check-navigation-button": "off",
+    "teach": "off"
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "c=$(jq -r \".tool_input.command // \\\"\\\"\"); printf \"%s\" \"$c\" | grep -qEi \"git[^|;&]*commit\" && printf \"%s\" \"$c\" | grep -qi \"co-authored-by\" && printf \"%s\" \"{\\\"hookSpecificOutput\\\": {\\\"hookEventName\\\": \\\"PreToolUse\\\", \\\"permissionDecision\\\": \\\"deny\\\", \\\"permissionDecisionReason\\\": \\\"Blocked: this commit message contains Co-Authored-By. Attribution comes from attribution.commit in ~/.claude/settings.json (currently 'Assisted-by: Claude') - drop the trailer and let the setting add it.\\\"}}\"; true",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
