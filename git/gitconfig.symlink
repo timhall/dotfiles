@@ -15,6 +15,7 @@
 
 [branch]
 	sort = -committerdate
+	autoSetupMerge = false
 
 [color]
 	ui = auto
