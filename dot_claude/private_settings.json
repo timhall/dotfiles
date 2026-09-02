@@ -106,6 +106,7 @@
       ]
     },
     "excludedCommands": [
+      "chezmoi *",
       "docker *",
       "docker-compose *",
       "prlctl *",
