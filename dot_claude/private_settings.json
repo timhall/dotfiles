@@ -94,7 +94,8 @@
     },
     "filesystem": {
       "allowWrite": [
-        "~/.local/state/fnm_multishells"
+        "~/.local/state/fnm_multishells",
+        "~/.local/share/chezmoi"
       ]
     },
     "credentials": {
