@@ -3,11 +3,13 @@
 
 tap "docker/tap", trusted: true
 
+brew "awscli"
 brew "circleci"
 
 cask "1password"
 cask "1password-cli"
 cask "aws-vault-binary"
+cask "docker-desktop"
 cask "docker/tap/sbx", trusted: true
 cask "postman"
 cask "slack"

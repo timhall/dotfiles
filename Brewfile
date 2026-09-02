@@ -5,7 +5,6 @@
 # over rather than reinstalled.
 
 # Tools
-brew "awscli"
 brew "chezmoi"
 brew "ffmpeg"
 brew "fnm"
@@ -30,9 +29,7 @@ brew "xz"
 brew "zlib"
 
 # Applications
-cask "docker-desktop"
 cask "ghostty"
 cask "google-chrome"
 cask "obsidian"
-cask "raycast"
 cask "zed"
