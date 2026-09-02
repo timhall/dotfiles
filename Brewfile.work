@@ -11,5 +11,7 @@ cask "1password-cli"
 cask "aws-vault-binary"
 cask "docker-desktop"
 cask "docker/tap/sbx", trusted: true
-cask "postman"
 cask "slack"
+
+# Postman is deliberately absent: the working install is a release-candidate
+# build managed outside Homebrew, and the cask would only ever conflict with it.

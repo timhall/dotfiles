@@ -13,17 +13,24 @@ set -e
 
 [ "$(uname)" = "Darwin" ] || exit 0
 
-# --no-upgrade keeps this to installing what is missing. Upgrading everything
-# outdated is a separate, deliberate `brew upgrade`, not a side effect of
-# editing the package list.
-echo "› brew bundle"
-HOMEBREW_CASK_OPTS="--adopt" brew bundle install --no-upgrade \
-  --file="{{ .chezmoi.sourceDir }}/Brewfile"
+# A cask that exists at the destination but was not installed by Homebrew only
+# adopts when the two versions match exactly, so conflicts are expected and
+# should not abort the rest of the apply. brew bundle continues past individual
+# failures and reports at the end; report that and carry on.
+bundle() {
+  echo "› brew bundle$2"
+  # --no-upgrade keeps this to installing what is missing. Upgrading everything
+  # outdated is a separate, deliberate `brew upgrade`, not a side effect of
+  # editing the package list.
+  if ! HOMEBREW_CASK_OPTS="--adopt" brew bundle install --no-upgrade --file="$1"; then
+    echo "  ! some packages did not install; see above"
+  fi
+}
+
+bundle "{{ .chezmoi.sourceDir }}/Brewfile"
 
 # Work-only packages. The marker is a plain file rather than chezmoi data, so
 # the repo keeps zero templates and `chezmoi re-add` stays universal.
 if [ -f "$HOME/.config/dotfiles-work" ]; then
-  echo "› brew bundle (work)"
-  HOMEBREW_CASK_OPTS="--adopt" brew bundle install --no-upgrade \
-    --file="{{ .chezmoi.sourceDir }}/Brewfile.work"
+  bundle "{{ .chezmoi.sourceDir }}/Brewfile.work" " (work)"
 fi
