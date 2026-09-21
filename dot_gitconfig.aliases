@@ -45,10 +45,15 @@
   force = push --force-with-lease
 
   # List the branches `bclean` would delete, without deleting them
-  bclean-n = "!f() { git fetch --prune --quiet; git branch --format '%(refname:short) %(upstream:track) %(worktreepath)' | awk -v c=\"$(git branch --show-current)\" '$2 == \"[gone]\" && $3 == \"\" && $1 != c { print $1 }'; }; f"
+  bclean-n = !git bclean --dry-run
 
-  # Clean up branches whose upstream is gone (PR merged + remote branch deleted)
-  bclean = "!f() { for b in $(git bclean-n); do echo \"deleting $b ($(git rev-parse --short $b))\"; git branch -D \"$b\"; done; }; f"
+  # Restore the branches deleted by the most recent `bclean`
+  bclean-undo = !git bclean --undo
+
+  # NOTE: `bclean` itself is the git-bclean script in dev/scripts/bin. It deletes
+  # branches whose upstream is gone, once a merged PR confirms the work landed,
+  # and backs up each one to refs/bclean first. No alias here, or it would shadow
+  # the script.
 
   # List local branches already merged into the default branch (pipe to `xargs git branch -d`)
   bmerged = "!f() { DEFAULT=$(git default); git fetch --quiet origin $DEFAULT; git branch --merged origin/$DEFAULT --format '%(refname:short) %(worktreepath)' | awk -v d=\"$DEFAULT\" -v c=\"$(git branch --show-current)\" '$2 == \"\" && $1 != d && $1 != c { print $1 }'; }; f"
