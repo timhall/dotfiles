@@ -53,7 +53,7 @@
       "default_config_options": {
         "fast": true,
         "effort": "high",
-        "model": "sonnet",
+        "model": "default",
         "mode": "auto",
       },
       "type": "registry",
