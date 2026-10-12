@@ -62,6 +62,23 @@ The source lives at `~/.local/share/chezmoi`, chezmoi's default. A symlink at
 `~/dev` for editing: same directory, two paths. It is a normal git repo; commit
 and push as usual, or use `chezmoi git -- <args>` / `chezmoi cd`.
 
+## Syncing live edits back
+
+Tools and installers edit live files (`~/.zshrc`, `~/.gitconfig`) without
+telling the repo. To find and capture those edits:
+
+1. `chezmoi status`. An `M` in the first column means the live file changed
+   since chezmoi last wrote it; `MM` also means it differs from the source.
+2. `chezmoi diff --reverse` shows what `re-add` would pull in (live -> source).
+   Plain `chezmoi diff` is the opposite direction: what `apply` would overwrite.
+3. `chezmoi re-add <files>`, naming only the ones you want. It commits
+   automatically.
+4. `chezmoi git -- push`. Pushing is never automatic.
+
+When an installer appends to `.zshrc` (PATH lines, completions), move the line
+to `.zshenv`, then `chezmoi apply ~/.zshenv ~/.zshrc` to clear it from the live
+file. Otherwise `status` keeps flagging it.
+
 ## What's here
 
 - **shell**: `.zshenv` (PATH and toolchain), `.zshrc` (aliases and shell
@@ -103,8 +120,9 @@ needs a browser, a password, or a GUI toggle no script can reach.
       name a key, because ssh already tries `id_ed25519` by default and skips
       it silently when absent.
 - [ ] **Clone the repos on `PATH`.** `.zshenv` adds `~/dev/scripts/bin`,
-      `~/dev/timhall/skills/bin`, and
-      `~/dev/scratch/project-guide/packages/cli/dist`. Missing entries are
+      `~/dev/timhall/skills/bin`,
+      `~/dev/scratch/project-guide/packages/cli/dist`, and
+      `~/dev/postman-eng/unified-runtime-monorepo/scripts`. Missing entries are
       harmless, but the tools aren't there until you clone them.
 - [ ] **Install agent skills.** They are deliberately not in this repo; see
       Related below. `npx skills add` prompts for which skills to take from
