@@ -1,4 +1,8 @@
 {
+  "attribution": {
+    "commit": "Assisted-by: Claude",
+    "pr": ""
+  },
   "permissions": {
     "allow": [
       "Read(~/**)",
@@ -71,10 +75,47 @@
       "~/Documents/notes"
     ]
   },
+  "skillOverrides": {
+    "v3-rebuild-fs": "off",
+    "v3-fs-to-v2": "off",
+    "find-skills": "off",
+    "codebase-design": "off",
+    "research": "off",
+    "domain-modeling": "off",
+    "wayfinder": "off",
+    "setup-matt-pocock-skills": "off",
+    "prototype": "off",
+    "to-spec": "off",
+    "improve-codebase-architecture": "off",
+    "triage": "off",
+    "check-translations": "off",
+    "supabase-realtime-checklist": "off",
+    "ask-matt": "off",
+    "fix-android-network": "off",
+    "implement": "off",
+    "check-navigation-button": "off",
+    "teach": "off"
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "c=$(jq -r \".tool_input.command // \\\"\\\"\"); printf \"%s\" \"$c\" | grep -qEi \"git[^|;&]*commit\" && printf \"%s\" \"$c\" | grep -qi \"co-authored-by\" && printf \"%s\" \"{\\\"hookSpecificOutput\\\": {\\\"hookEventName\\\": \\\"PreToolUse\\\", \\\"permissionDecision\\\": \\\"deny\\\", \\\"permissionDecisionReason\\\": \\\"Blocked: this commit message contains Co-Authored-By. Attribution comes from attribution.commit in ~/.claude/settings.json (currently 'Assisted-by: Claude') - drop the trailer and let the setting add it.\\\"}}\"; true",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
   "enabledPlugins": {
     "obsidian@obsidian-skills": true,
     "atlassian@claude-plugins-official": true,
-    "slack@claude-plugins-official": true
+    "slack@claude-plugins-official": true,
+    "newrelic@claude-plugins-official": true,
+    "postman@claude-plugins-official": true
   },
   "sandbox": {
     "enabled": true,
@@ -115,45 +156,6 @@
       "gh *"
     ]
   },
-  "attribution": {
-    "commit": "Assisted-by: Claude",
-    "pr": ""
-  },
   "alwaysThinkingEnabled": true,
-  "theme": "light",
-  "skillOverrides": {
-    "v3-rebuild-fs": "off",
-    "v3-fs-to-v2": "off",
-    "find-skills": "off",
-    "codebase-design": "off",
-    "research": "off",
-    "domain-modeling": "off",
-    "wayfinder": "off",
-    "setup-matt-pocock-skills": "off",
-    "prototype": "off",
-    "to-spec": "off",
-    "improve-codebase-architecture": "off",
-    "triage": "off",
-    "check-translations": "off",
-    "supabase-realtime-checklist": "off",
-    "ask-matt": "off",
-    "fix-android-network": "off",
-    "implement": "off",
-    "check-navigation-button": "off",
-    "teach": "off"
-  },
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "c=$(jq -r \".tool_input.command // \\\"\\\"\"); printf \"%s\" \"$c\" | grep -qEi \"git[^|;&]*commit\" && printf \"%s\" \"$c\" | grep -qi \"co-authored-by\" && printf \"%s\" \"{\\\"hookSpecificOutput\\\": {\\\"hookEventName\\\": \\\"PreToolUse\\\", \\\"permissionDecision\\\": \\\"deny\\\", \\\"permissionDecisionReason\\\": \\\"Blocked: this commit message contains Co-Authored-By. Attribution comes from attribution.commit in ~/.claude/settings.json (currently 'Assisted-by: Claude') - drop the trailer and let the setting add it.\\\"}}\"; true",
-            "timeout": 10
-          }
-        ]
-      }
-    ]
-  }
+  "theme": "light"
 }

@@ -10,7 +10,8 @@ Tim's todos live in his daily note (`~/Documents/notes/Daily Notes/YYYY-MM-DD.md
 # Shell commands
 
 Shape Bash commands to match my permission allowlist and avoid needless prompts:
-- Only two `cd newdir && …` combos are hard-wired to force manual approval: combining `cd` with `git` (hooks), or with a **file** redirect whose target dir is ambiguous (`cmd > out.txt`). `2>&1`, `2>/dev/null`, and pipes (`| tail`) do NOT trip it, and a plain `cd` into a subdir of the working directory is a read-only built-in that needs no allow rule. For the two that do prompt, use a directory flag (`git -C`, `pnpm -C`, `npm --prefix`), an absolute redirect path, or run `cd` as its own separate call (working dir persists).
+- Default to a command's own directory flag over `cd newdir && …` whenever one exists — `git -C`, `pnpm -C`, `npm --prefix`, and equivalents on other tools. Don't wait to hit a prompt first; reach for the flag from the start. It's not just the two hard-wired cases below that benefit — it's fewer moving parts generally, and one less thing to get denied on a retry.
+- Only two `cd newdir && …` combos are hard-wired to force manual approval: combining `cd` with `git` (hooks), or with a **file** redirect whose target dir is ambiguous (`cmd > out.txt`). `2>&1`, `2>/dev/null`, and pipes (`| tail`) do NOT trip it, and a plain `cd` into a subdir of the working directory is a read-only built-in that needs no allow rule. For the two that do prompt, use a directory flag, an absolute redirect path, or run `cd` as its own separate call (working dir persists).
 - Every segment of a piped/compound command must independently match an allow rule. Claude Code splits on `&&`/`||`/`;`/`|`/`&`/newlines first, so a rule can't contain those operators (e.g. `Bash(cd * && pnpm *)` is dead syntax); allowlist each tool separately instead.
 - Anchor commands at an allowlisted leading token; prefer Read/Grep/Glob over Bash where possible.
 

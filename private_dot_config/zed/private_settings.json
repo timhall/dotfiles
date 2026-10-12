@@ -44,6 +44,9 @@
     },
   },
   "agent_servers": {
+    "opencode": {
+      "type": "registry"
+    },
     "claude-acp": {
       "favorite_config_option_values": {
         "mode": [
