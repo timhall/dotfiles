@@ -67,13 +67,9 @@
       "mcp__plugin_slack_slack__slack_read_file",
       "Skill(update-config)"
     ],
-    "deny": [
-      "Bash(git push*)"
-    ],
+    "deny": [],
     "defaultMode": "auto",
-    "additionalDirectories": [
-      "~/Documents/notes"
-    ]
+    "additionalDirectories": ["~/Documents/notes"]
   },
   "skillOverrides": {
     "v3-rebuild-fs": "off",
@@ -134,10 +130,7 @@
       ]
     },
     "filesystem": {
-      "allowWrite": [
-        "~/.local/state/fnm_multishells",
-        "~/.local/share/chezmoi"
-      ]
+      "allowWrite": ["~/.local/state/fnm_multishells", "~/.local/share/chezmoi"]
     },
     "credentials": {
       "files": [
@@ -147,14 +140,7 @@
         }
       ]
     },
-    "excludedCommands": [
-      "chezmoi *",
-      "docker *",
-      "docker-compose *",
-      "prlctl *",
-      "aws-vault *",
-      "gh *"
-    ]
+    "excludedCommands": ["chezmoi *", "docker *", "docker-compose *", "prlctl *", "aws-vault *", "gh *", "pnpm *"]
   },
   "alwaysThinkingEnabled": true,
   "theme": "light"
