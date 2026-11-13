@@ -90,8 +90,9 @@ file. Otherwise `status` keeps flagging it.
 - **`.config/zed/`**: `settings.json` and `keymap.json`.
 - **`.npmrc`**: reads `${NPM_TOKEN}` from the environment rather than storing a
   token, so npm and yarn share one value and the repo stays clean.
-- **`Brewfile`**, **`Brewfile.work`**, and three `run_` scripts: install
-  Homebrew, reconcile packages, and set macOS defaults.
+- **`Brewfile`**, **`Brewfile.work`**, and four `run_` scripts: install
+  Homebrew, reconcile packages, bootstrap toolchains (rust via rustup, node via
+  fnm, python via pyenv), and set macOS defaults.
 - **`.config/chezmoi/chezmoi.toml`**: chezmoi's own settings. `re-add` stages
   and commits automatically so a rescued edit cannot sit uncommitted; pushing
   stays manual.
@@ -147,6 +148,30 @@ needs a browser, a password, or a GUI toggle no script can reach.
 - [ ] **Sign in to the rest**: Chrome, Docker Desktop, and on a work machine
       Slack and Postman.
 - [ ] **Log out and back in** so dark mode and the login-time defaults apply.
+
+## Optional: local edit predictions
+
+Zed's edit predictions use Zed's hosted provider by default. This machine
+points them at a local model instead, which needs setup that no script does:
+install LM Studio, download `sweep-next-edit-1.5b-mlx`, start its server on
+port 1235, then replace the `edit_predictions` block in
+`~/.config/zed/settings.json`:
+
+```json
+"edit_predictions": {
+  "open_ai_compatible_api": {
+    "max_output_tokens": 512,
+    "prompt_format": "sweep",
+    "model": "sweep-next-edit-1.5b-mlx",
+    "api_url": "http://localhost:1235/v1/completions"
+  },
+  "provider": "open_ai_compatible_api",
+  "mode": "subtle"
+}
+```
+
+The repo deliberately keeps the hosted provider, so `chezmoi apply` overwrites
+this block. Re-paste it afterward, or apply by target and skip the Zed file.
 
 ## What's _not_ synced
 
