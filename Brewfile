@@ -5,6 +5,7 @@
 # over rather than reinstalled.
 
 tap "oven-sh/bun", trusted: true
+tap "roc-lang/roc", trusted: true
 
 # Tools
 brew "chezmoi"
@@ -20,6 +21,7 @@ brew "oven-sh/bun/bun"
 brew "opencode"
 brew "pngcrush"
 brew "pyenv"
+brew "roc-lang/roc/roc"
 brew "uv"
 brew "zig"
 
