@@ -39,6 +39,8 @@
       "Bash(claude:*)",
       "Bash(defuddle parse:*)",
       "Bash(obsidian read:*)",
+      "Bash(open *zed://agent*)",
+      "Bash(zed *)",
       "WebSearch",
       "WebFetch(domain:www.postman.com)",
       "WebFetch(domain:github.com)",
@@ -99,7 +101,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "c=$(jq -r \".tool_input.command // \\\"\\\"\"); printf \"%s\" \"$c\" | grep -qEi \"git[^|;&]*commit\" && printf \"%s\" \"$c\" | grep -qi \"co-authored-by\" && printf \"%s\" \"{\\\"hookSpecificOutput\\\": {\\\"hookEventName\\\": \\\"PreToolUse\\\", \\\"permissionDecision\\\": \\\"deny\\\", \\\"permissionDecisionReason\\\": \\\"Blocked: this commit message contains Co-Authored-By. Attribution comes from attribution.commit in ~/.claude/settings.json (currently 'Assisted-by: Claude') - drop the trailer and let the setting add it.\\\"}}\"; true",
+            "command": "bash ~/.claude/hooks/rewrite-coauthor.sh",
             "timeout": 10
           }
         ]
@@ -140,7 +142,17 @@
         }
       ]
     },
-    "excludedCommands": ["chezmoi *", "docker *", "docker-compose *", "prlctl *", "aws-vault *", "gh *", "pnpm *"]
+    "excludedCommands": [
+      "chezmoi *",
+      "docker *",
+      "docker-compose *",
+      "prlctl *",
+      "aws-vault *",
+      "gh *",
+      "pnpm *",
+      "open *",
+      "zed *"
+    ]
   },
   "alwaysThinkingEnabled": true,
   "theme": "light"
