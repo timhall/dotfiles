@@ -4,6 +4,8 @@
 # Casks install with --adopt, so an app already at the destination is taken
 # over rather than reinstalled.
 
+tap "oven-sh/bun", trusted: true
+
 # Tools
 brew "chezmoi"
 brew "ffmpeg"
