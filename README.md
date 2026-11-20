@@ -101,8 +101,9 @@ file. Otherwise `status` keeps flagging it.
 - **`dot_claude/`** -> `~/.claude/`: Claude Code global config. `CLAUDE.md` and
   `settings.json` (curated permission allowlist).
 - **`.config/zed/`**: `settings.json` and `keymap.json`.
-- **`.npmrc`**: reads `${NPM_TOKEN}` from the environment rather than storing a
-  token, so npm and yarn share one value and the repo stays clean.
+- **`.npmrc`**, **`.yarnrc.yml`**: read `${NPM_TOKEN}` from the environment
+  rather than storing a token, so npm, pnpm, and yarn share one value and the
+  repo stays clean. Yarn 2+ ignores `.npmrc`, hence the second file.
 - **`Brewfile`**, **`Brewfile.work`**, and four `run_` scripts: install
   Homebrew, reconcile packages, bootstrap toolchains (rust via rustup, node via
   fnm, python via pyenv), and set macOS defaults.
@@ -124,7 +125,7 @@ needs a browser, a password, or a GUI toggle no script can reach.
       Wherever you keep them (1Password, Apple Passwords, or freshly
       minted) is a per-machine decision. The file ships with placeholders, and chezmoi
       creates it only when absent and never overwrites it, so real values are
-      safe there. `~/.npmrc` resolves `${NPM_TOKEN}`, so anything touching a
+      safe there. `~/.npmrc` and `~/.yarnrc.yml` resolve `${NPM_TOKEN}`, so anything touching a
       private package fails until this is done; public installs work regardless.
 - [ ] **`gh auth login`.** GitHub credentials are generated per machine rather
       than carried in the repo.
