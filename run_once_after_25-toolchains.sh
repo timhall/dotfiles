@@ -37,3 +37,12 @@ if command -v fnm >/dev/null && ! command -v pnpm >/dev/null; then
   cp "$zshrc_backup" "$HOME/.zshrc"
   rm "$zshrc_backup"
 fi
+
+# Yarn Classic as a launcher: repos pin their own release via yarnPath, so no
+# corepack. pnpm's global bin dir is already on PATH via .zshenv.
+export PNPM_HOME="$HOME/Library/pnpm"
+export PATH="$PNPM_HOME/bin:$PNPM_HOME:$PATH"
+if command -v pnpm >/dev/null && ! command -v yarn >/dev/null; then
+  echo "› installing yarn"
+  pnpm add -g yarn
+fi

@@ -13,6 +13,10 @@ set -e
 
 [ "$(uname)" = "Darwin" ] || exit 0
 
+# On a fresh machine the shell that launched chezmoi predates Homebrew, so brew
+# is not on PATH yet.
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
 # A cask that exists at the destination but was not installed by Homebrew only
 # adopts when the two versions match exactly, so conflicts are expected and
 # should not abort the rest of the apply. brew bundle continues past individual
