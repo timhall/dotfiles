@@ -6,6 +6,9 @@
   "permissions": {
     "allow": [
       "Read(~/**)",
+      "Read(~/.config/pa-test/**)",
+      "Read(//Users/tim.hall/.config/pa-test/**)",
+      "Bash(pa-test:*)",
       "Bash(ls:*)",
       "Bash(cat:*)",
       "Bash(grep:*)",
@@ -149,6 +152,7 @@
       "prlctl *",
       "aws-vault *",
       "gh *",
+      "pa-test *",
       "pnpm *",
       "open *",
       "zed *"
