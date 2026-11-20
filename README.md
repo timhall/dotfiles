@@ -118,7 +118,7 @@ needs a browser, a password, or a GUI toggle no script can reach.
 
 - [ ] **On a work machine, `touch ~/.config/dotfiles-work` and re-run
       `chezmoi apply`.** That marker is the only thing distinguishing the two
-      machine types; it gates `Brewfile.work` (1Password, Slack, Postman,
+      machine types; it gates `Brewfile.work` (1Password, Docker,
       CircleCI, aws-vault, and the Docker sandbox tap). Do it before the token
       step below if you keep those tokens in 1Password.
 - [ ] **Fill in `~/.zshenv.local`** with `CIRCLECI_TOKEN` and `NPM_TOKEN`.
