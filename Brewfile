@@ -37,7 +37,7 @@ brew "zlib"
 # Applications
 cask "claude-code"
 cask "ghostty"
-cask "google-chrome"
+cask "lm-studio"
 cask "obsidian"
 cask "swiftbar"
 cask "zed"

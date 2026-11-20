@@ -45,6 +45,9 @@ export PATH="$HOME/.local/bin:$PATH"
 # obsidian
 export PATH="$PATH:/Applications/Obsidian.app/Contents/MacOS"
 
+# lm studio (`lms` CLI)
+export PATH="$PATH:$HOME/.lmstudio/bin"
+
 #
 # Tool Environment
 #
