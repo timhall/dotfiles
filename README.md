@@ -15,16 +15,29 @@ Everything else, including Homebrew, is installed by `chezmoi apply`.
 ## New machine
 
 ```sh
-sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply timhall
+sh -c "$(curl -fsLS get.chezmoi.io)" -- -b ~/.local/bin init --apply timhall
 ```
 
-That installs chezmoi, clones this repo to `~/.local/share/chezmoi`, runs the
-provisioning scripts, and writes `$HOME`. There is nothing to install first:
-`brew install chezmoi` would be circular, since chezmoi is what installs
-Homebrew.
+That installs chezmoi to `~/.local/bin`, clones this repo to
+`~/.local/share/chezmoi`, runs the provisioning scripts, and writes `$HOME`.
+There is nothing to install first: `brew install chezmoi` would be circular,
+since chezmoi is what installs Homebrew.
+
+The `-b ~/.local/bin` matters. Without it the installer drops the binary in
+`./bin` of whatever directory you ran it from and prints `add bin to your PATH
+to use chezmoi`. That message is informational, not an error: the install and
+`init --apply` still run, but a bare `chezmoi` won't resolve afterwards.
+`~/.local/bin` is already on `PATH` via `.zshenv`, so once the apply finishes,
+open a new shell (or `exec zsh`) and `chezmoi` works. Until then, call it as
+`~/.local/bin/chezmoi`. Homebrew later installs its own copy from the
+`Brewfile`; the `~/.local/bin` one is harmless and can stay.
 
 To look before it writes, drop `--apply`, then run `chezmoi diff` and
 `chezmoi apply -v` separately.
+
+If you already ran the installer without `-b`, the binary is in `./bin`. Run
+`./bin/chezmoi init --apply timhall` (or `apply -v` if init already completed),
+then delete the stray `bin/` directory.
 
 ## No templates
 
